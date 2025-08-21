@@ -1,0 +1,11 @@
+services:
+  postgresql:
+    image: ghcr.io/dbsystel/postgresql-partman:16
+    ports:
+      - "${POSTGRESQL_PORT:-5432:5432}"
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: postgres
+    volumes:
+      - .stub/postgresql/init.sh:/docker-entrypoint-initdb.d/init.sh
