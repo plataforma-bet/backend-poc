@@ -5,8 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-
-	"gorm.io/gorm"
 )
 
 func (r Repository) GetWalletByUserId(ctx context.Context, userId uint) (*wallet.Wallet, error) {
@@ -15,7 +13,7 @@ func (r Repository) GetWalletByUserId(ctx context.Context, userId uint) (*wallet
 	var userWallet wallet.Wallet
 
 	if err := r.WithContext(ctx).First(&userWallet, userId).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
+		if errors.Is(err, r.ErrNotFound()) {
 			return nil, nil
 		}
 		return nil, fmt.Errorf("%s: %w", operation, err)

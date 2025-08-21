@@ -42,3 +42,7 @@ func (p *Pool) Close() error {
 
 	return sqlDB.Close()
 }
+
+func (p *Pool) ErrNotFound() error {
+	return gorm.ErrRecordNotFound
+}
