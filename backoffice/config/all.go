@@ -14,6 +14,15 @@ type PostgresSQL struct {
 	DatabaseHost     string `conf:"env:ENDPOINT,default:localhost"`
 	DatabasePort     string `conf:"env:PORT,default:5432"`
 	DatabaseSSLMode  string `conf:"env:SSLMODE,default:disable"`
+
+	DatabaseMigrationUser     string `conf:"env:MIGRATION_USER,default:postgres"`
+	DatabaseMigrationPassword string `conf:"env:MIGRATION_PASSWORD,default:postgres,mask"`
+}
+
+type ConfigJWT struct {
+	Secret        string `conf:"env:SECRET_JWT,default:secret"`
+	AccessExpiry  int    `conf:"env:ACCESS_EXPIRY,default:15"`
+	RefreshExpiry int    `conf:"env:REFRESH_EXPIRY,default:7"`
 }
 
 func (c *PostgresSQL) PoolConnectionString() string {
@@ -23,5 +32,15 @@ func (c *PostgresSQL) PoolConnectionString() string {
 
 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		c.DatabaseUser, c.DatabasePassword, c.DatabaseHost, c.DatabasePort,
+		c.DatabaseName, c.DatabaseSSLMode)
+}
+
+func (c *PostgresSQL) MigrationConnectionString() string {
+	if c.DatabaseSSLMode == "" {
+		c.DatabaseSSLMode = "disable"
+	}
+
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		c.DatabaseMigrationUser, c.DatabaseMigrationPassword, c.DatabaseHost, c.DatabasePort,
 		c.DatabaseName, c.DatabaseSSLMode)
 }

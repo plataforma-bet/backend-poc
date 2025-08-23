@@ -1,4 +1,4 @@
-package pg
+package user
 
 import "backend-poc/backoffice/extensions/pg"
 

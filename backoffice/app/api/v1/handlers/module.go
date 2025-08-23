@@ -1,7 +1,11 @@
 package handlers
 
-import "go.uber.org/fx"
+import (
+	userAuth "backend-poc/backoffice/app/api/v1/handlers/auth"
 
-var Module = fx.Module("api:v1:handlers",
-	fx.Provide(NewHandler),
+	"go.uber.org/fx"
+)
+
+var Module = fx.Module("backoffice:api:handlers",
+	fx.Provide(userAuth.NewHandler),
 )

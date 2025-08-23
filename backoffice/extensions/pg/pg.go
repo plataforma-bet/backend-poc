@@ -4,12 +4,11 @@ import (
 	"backend-poc/backoffice/config"
 	"context"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Pool struct {
-	*gorm.DB
+	*pgxpool.Pool
 }
 
 func New(ctx context.Context, conStr config.PostgresSQL) (*Pool, error) {
@@ -17,32 +16,21 @@ func New(ctx context.Context, conStr config.PostgresSQL) (*Pool, error) {
 }
 
 func NewFromConnString(ctx context.Context, connStr string) (*Pool, error) {
-	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
+	c, err := pgxpool.ParseConfig(connStr)
 	if err != nil {
 		return nil, err
 	}
 
-	sqlDB, err := db.DB()
+	pool, err := pgxpool.NewWithConfig(ctx, c)
 	if err != nil {
 		return nil, err
 	}
 
-	if err = sqlDB.PingContext(ctx); err != nil {
-		return nil, err
-	}
-
-	return &Pool{DB: db}, nil
+	return &Pool{
+		Pool: pool,
+	}, nil
 }
 
-func (p *Pool) Close() error {
-	sqlDB, err := p.DB.DB()
-	if err != nil {
-		return err
-	}
-
-	return sqlDB.Close()
-}
-
-func (p *Pool) ErrNotFound() error {
-	return gorm.ErrRecordNotFound
+func (p Pool) Close() {
+	p.Pool.Close()
 }
