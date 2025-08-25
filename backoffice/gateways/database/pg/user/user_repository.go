@@ -2,6 +2,7 @@ package user
 
 import (
 	"backend-poc/backoffice/domain/user"
+	"backend-poc/backoffice/extensions/telemetry"
 	"context"
 	"database/sql"
 	"errors"
@@ -23,6 +24,9 @@ const (
 
 func (r *Repository) Create(ctx context.Context, user *user.User) error {
 	const operation = "user.Repository.CreateUser"
+
+	ctx, span := telemetry.StartSpan(ctx, operation)
+	defer span.End()
 
 	_, err := r.Exec(
 		ctx,

@@ -3,8 +3,9 @@ package config
 import "fmt"
 
 type Global struct {
-	APIName string `conf:"default:backoffice:api"`
-	Address string `conf:"env:SERVER_ADDR,default::3000"`
+	APIName     string `conf:"default:backoffice:api"`
+	Address     string `conf:"env:SERVER_ADDR,default::3000"`
+	Environment string `conf:"env:SERVER_ENV,default:dev"`
 }
 
 type PostgresSQL struct {

@@ -2,6 +2,7 @@ package session
 
 import (
 	"backend-poc/backoffice/domain/session"
+	"backend-poc/backoffice/extensions/telemetry"
 	"context"
 	"fmt"
 )
@@ -15,6 +16,9 @@ const (
 
 func (r *Repository) Create(ctx context.Context, session *session.Session) error {
 	const operation = "session.Repository.Create"
+
+	ctx, span := telemetry.StartSpan(ctx, operation)
+	defer span.End()
 
 	_, err := r.Exec(
 		ctx,

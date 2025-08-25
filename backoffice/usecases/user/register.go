@@ -4,14 +4,27 @@ import (
 	"backend-poc/backoffice/domain/session"
 	"backend-poc/backoffice/domain/user"
 	"backend-poc/backoffice/extensions/auth"
+	"backend-poc/backoffice/extensions/telemetry"
 	"context"
 	"errors"
 	"fmt"
 	"time"
+
+	"go.opentelemetry.io/otel/attribute"
 )
 
 func (uc *UseCase) Register(ctx context.Context, input RegisterInput, audit Audit) (*RegisterOutPut, error) {
 	const operation = "UseCase.Auth.Register"
+
+	ctx, span := telemetry.StartSpan(ctx, operation)
+	defer span.End()
+
+	span.SetAttributes(
+		attribute.String("id", input.ID.String()),
+		attribute.String("role", input.Role),
+		attribute.String("user_agent", audit.UserAgent),
+		attribute.String("ip_address", audit.IPAddress),
+	)
 
 	if err := input.Validate(); err != nil {
 		return nil, fmt.Errorf("%s: %w", operation, err)

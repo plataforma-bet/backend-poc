@@ -21,7 +21,7 @@ func initializeTracerProvider(ctx context.Context, telemetry OpenTelemetry, reso
 	}
 
 	tracerProvider := sdktrace.NewTracerProvider(
-		sdktrace.WithSampler(sdktrace.TraceIDRatioBased(telemetry.SamplingRate)),
+		sdktrace.WithSampler(sdktrace.TraceIDRatioBased(telemetry.SamplingRatio)),
 		sdktrace.WithBatcher(tracerExporter),
 		sdktrace.WithResource(resource),
 	)

@@ -7,17 +7,22 @@ import (
 	"go.uber.org/fx"
 )
 
-func Module(applicationNAme string) fx.Option {
+func Module(applicationName string) fx.Option {
 	return fx.Module("telemetryfx:oTel",
 		fx.Provide(func() telemetry.OpenTelemetry {
 			return telemetry.NewOpenTelemetry(
-				telemetry.ApplicationName(applicationNAme),
+				telemetry.ApplicationName(applicationName),
 			)
 		}),
 		OtelModule,
+		LogModule,
 		EchoModule,
 	)
 }
+
+var LogModule = fx.Module("telemetryfx:logger",
+	fx.Invoke(telemetry.SetLogger),
+)
 
 var OtelModule = fx.Module("telemetryfx:otel",
 	fx.Invoke(func(lifecycle fx.Lifecycle, openTelemetry telemetry.OpenTelemetry) {

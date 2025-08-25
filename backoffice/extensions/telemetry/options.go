@@ -9,7 +9,7 @@ type OpenTelemetry struct {
 	Version         string
 	Endpoint        string
 	Environment     string
-	SamplingRate    float64
+	SamplingRatio   float64
 }
 
 type OpenTelemetryOption func(*OpenTelemetry)
@@ -36,7 +36,7 @@ func NewOpenTelemetry(opts ...OpenTelemetryOption) OpenTelemetry {
 		Version:         parsedConfig.Version,
 		Endpoint:        parsedConfig.Endpoint,
 		Environment:     environment,
-		SamplingRate:    parsedConfig.SamplingRate,
+		SamplingRatio:   parsedConfig.SamplingRate,
 	}
 
 	for _, opt := range opts {
@@ -49,6 +49,42 @@ func NewOpenTelemetry(opts ...OpenTelemetryOption) OpenTelemetry {
 func ApplicationName(applicationName string) OpenTelemetryOption {
 	return func(o *OpenTelemetry) {
 		o.ApplicationName = applicationName
+	}
+}
+
+func NameSpace(nameSpace string) OpenTelemetryOption {
+	return func(o *OpenTelemetry) {
+		o.Namespace = nameSpace
+	}
+}
+
+func InstanceID(instanceID string) OpenTelemetryOption {
+	return func(o *OpenTelemetry) {
+		o.InstanceID = instanceID
+	}
+}
+
+func Version(version string) OpenTelemetryOption {
+	return func(o *OpenTelemetry) {
+		o.Version = version
+	}
+}
+
+func Endpoint(endpoint string) OpenTelemetryOption {
+	return func(o *OpenTelemetry) {
+		o.Endpoint = endpoint
+	}
+}
+
+func Environment(environment string) OpenTelemetryOption {
+	return func(o *OpenTelemetry) {
+		o.Environment = environment
+	}
+}
+
+func SamplingRate(samplingRate float64) OpenTelemetryOption {
+	return func(o *OpenTelemetry) {
+		o.SamplingRatio = samplingRate
 	}
 }
 
